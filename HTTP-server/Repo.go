@@ -8,7 +8,7 @@ import (
 func RepoCreateStudent(t Student) Base {
 
 	fmt.Print(t)
-	stmt, err := db.Prepare("INSERT Student SET Id=?,ClassNum=?,Score=? ON DUPLICATE KEY UPDATE Id=VALUES(Id)")
+	stmt, err := db.Prepare("INSERT student SET id=?,class_num=?,score=? ON DUPLICATE KEY UPDATE id=VALUES(id)")
 
 	checkErr(err)
 	query, err := stmt.Exec(t.Id, t.ClassNum, t.Score)
@@ -31,7 +31,7 @@ func RepoCreateStudent(t Student) Base {
 
 func RepoCreateclass(t class) Base {
 
-	stmt, err := db.Prepare("INSERT class SET ClassNum=?,TeacherName=?")
+	stmt, err := db.Prepare("INSERT class SET class_num=?,teacher_name=?")
 	checkErr(err)
 	query, err := stmt.Exec(t.ClassNum, t.TeacherName)
 	checkErr(err)
@@ -52,7 +52,7 @@ func RepoCreateclass(t class) Base {
 
 func RepoGetSumScore(i string) []ScoreInfo{
 
-	rows, err := db.Query("select SUM(Score) from Student where ClassNum = (select ClassNum from Student where Id = ?)",i)
+	rows, err := db.Query("select SUM(score) from student where class_num = (select class_num from student where id = ?)",i)
 
 	checkErr(err)
 	v := reflect.ValueOf(rows)
@@ -74,7 +74,7 @@ func RepoGetSumScore(i string) []ScoreInfo{
 
 func RepoGetTopScoreTeacher() []TeacherInfo {
 
-	rows, err := db.Query("select TeacherName from class where ClassNum = (select ClassNum from Student order by Id,Score limit 1)")
+	rows, err := db.Query("select teacher_name from class where class_num = (select class_num from student order by id,score limit 1)")
 
 	checkErr(err)
 	v := reflect.ValueOf(rows)
