@@ -9,8 +9,8 @@ Go version 1.8
 
 Feature
 
-* Mysql : persistent data
-* Router : url router and dispatcher
+* Mysql : Persistent data
+* Router : URL router and dispatcher
 * Logger : parse & process the output easily
 
 Build & Run
