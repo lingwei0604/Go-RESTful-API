@@ -2,6 +2,7 @@ package main
 
 import "net/http"
 
+// match url
 type Route struct {
 	Name        string
 	Method      string
@@ -22,24 +23,24 @@ var routes = Routes{
 		"AddStudent",
 		"POST",
 		"/register-student",
-		AddStudent,
+		addStudent,
 	},
 	Route{
 		"AddClass",
 		"POST",
 		"/register-class",
-		AddClass,
+		addClass,
 	},
 	Route{
 		"GetSumScore",
 		"GET",
 		"/get-class-total-score/{id}",
-		GetSumScore,
+		getTotalScore,
 	},
 	Route{
 		"GetTeacherFromScore",
 		"GET",
 		"/get-top-teacher",
-		GetTeacherFromScore,
+		getTeacherFromScore,
 	},
 }

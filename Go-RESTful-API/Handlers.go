@@ -1,35 +1,37 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"io/ioutil"
+	"encoding/json"
 	"github.com/gorilla/mux"
     _ "github.com/go-sql-driver/mysql"
 )
-
+/*
+Concrete implementation to handle requet from the data sources
+*/
 func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Welcome!\n")
 }
 
-func AddStudent(w http.ResponseWriter, r *http.Request) {
+func addStudent(w http.ResponseWriter, r *http.Request) {
 	var student Student
 
-	b, err := ioutil.ReadAll(r.Body)
+	result, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	err = json.Unmarshal([]byte(b), &student)
+	err = json.Unmarshal([]byte(result), &student)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	t := RepoCreateStudent(student)
+	t := Repo_AddStudent(student)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
 	if err := json.NewEncoder(w).Encode(t); err != nil {
@@ -37,51 +39,50 @@ func AddStudent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetSumScore(w http.ResponseWriter, r *http.Request) {
+func addClass(w http.ResponseWriter, r *http.Request) {
+	var class Class
+
+	result, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	err = json.Unmarshal([]byte(result), &class)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	t := Repo_AddClass(class)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(t); err != nil {
+		panic(err)
+	}
+}
+
+func getTotalScore(w http.ResponseWriter, r *http.Request) {
+	var id string
 	vars := mux.Vars(r)
-	var todoId string
+	id = vars["id"]
 
-	todoId = vars["id"]
-
-	t := RepoGetSumScore(todoId)
+	result := Repo_GetTotalScore(id)
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(t); err != nil {
+	if err := json.NewEncoder(w).Encode(result); err != nil {
 		panic(err)
 	}
 }
 
-func GetTeacherFromScore(w http.ResponseWriter, r *http.Request) {
-	t := RepoGetTopScoreTeacher()
+func getTeacherFromScore(w http.ResponseWriter, r *http.Request) {
+	result := Repo_GetTeacherFromScore()
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(t); err != nil {
-		panic(err)
-	}
-}
-
-func AddClass(w http.ResponseWriter, r *http.Request) {
-	var todo class
-
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	err = json.Unmarshal([]byte(b), &todo)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	t := RepoCreateclass(todo)
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(t); err != nil {
+	if err := json.NewEncoder(w).Encode(result); err != nil {
 		panic(err)
 	}
 }
@@ -90,5 +91,4 @@ func checkErr(err error) {
 	if err != nil {
 		panic(err)
 	}
-
 }

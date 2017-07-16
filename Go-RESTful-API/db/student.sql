@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (
   `id` varchar(11) NOT NULL COMMENT '学生编号',
-  `class_num` varchar(11) NOT NULL COMMENT ‘班级编号’,
+  `class_num` varchar(11) NOT NULL COMMENT '班级编号',
   `score` varchar(11) NOT NULL COMMENT '分数',
   UNIQUE (`Id`),
   INDEX `student_id` (`id`) comment ''

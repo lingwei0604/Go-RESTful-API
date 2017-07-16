@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"reflect"
 )
-
-func RepoCreateStudent(t Student) Base {
-
+/*
+ achieve repository
+ mysql、mongodb etc
+*/
+func Repo_AddStudent(t Student) Base {
 	fmt.Print(t)
 	stmt, err := db.Prepare("INSERT student SET id=?,class_num=?,score=? ON DUPLICATE KEY UPDATE id=VALUES(id)")
 
@@ -17,20 +19,19 @@ func RepoCreateStudent(t Student) Base {
 	v := reflect.ValueOf(query)
 	fmt.Println(v)
 
-	var info Base
+	var status Base
 
 	if err != nil {
-		info.Code = "1"
-		info.Msg = "fail"
-		return info
+		status.code = "0"
+		status.msg = "fail"
+		return status
 	}
-	info.Code = "0"
-	info.Msg = "Success"
-	return info
+	status.code = "1"
+	status.msg = "Success"
+	return status
 }
 
-func RepoCreateclass(t class) Base {
-
+func Repo_AddClass(t Class) Base {
 	stmt, err := db.Prepare("INSERT class SET class_num=?,teacher_name=?")
 	checkErr(err)
 	query, err := stmt.Exec(t.ClassNum, t.TeacherName)
@@ -39,56 +40,53 @@ func RepoCreateclass(t class) Base {
 	v := reflect.ValueOf(query)
 	fmt.Println(v)
 
-	var info Base
+	var status Base
 	if err != nil {
-		info.Code = "1"
-		info.Msg = "fail"
-		return info
+		status.code = "1"
+		status.msg = "fail"
+		return status
 	}
-	info.Code = "0"
-	info.Msg = "Success"
-	return info
+	status.code = "0"
+	status.msg = "Success"
+	return status
 }
 
-func RepoGetSumScore(i string) []ScoreInfo{
-
+func Repo_GetTotalScore(i string) []Score{
 	rows, err := db.Query("select SUM(score) from student where class_num = (select class_num from student where id = ?)",i)
 
 	checkErr(err)
 	v := reflect.ValueOf(rows)
 	fmt.Println(v)
 
-	fac := new(ScoreInfo)
-	facs := []ScoreInfo{}
+	tmp := new(Score)
+	tmps := []Score{}
 	for rows.Next() {
-		err1 := rows.Scan(&fac.Score)
+		err1 := rows.Scan(&tmp.totalScore)
 		if err1 != nil {
 			panic(err1.Error())
 		} else {
-			facs = append(facs, *fac)
+			tmps = append(tmps, *tmp)
 		}
 	}
-
-	return facs
+	return tmps
 }
 
-func RepoGetTopScoreTeacher() []TeacherInfo {
-
+func Repo_GetTeacherFromScore() []Teacher {
 	rows, err := db.Query("select teacher_name from class where class_num = (select class_num from student order by id,score limit 1)")
 
 	checkErr(err)
 	v := reflect.ValueOf(rows)
 	fmt.Println(v)
 
-	fac := new(TeacherInfo)
-	facs := []TeacherInfo{}
+	tmp := new(Teacher)
+	tmps := []Teacher{}
 	for rows.Next() {
-		err1 := rows.Scan(&fac.TeacherName)
+		err1 := rows.Scan(&tmp.teacherName)
 		if err1 != nil {
 			panic(err1.Error())
 		} else {
-			facs = append(facs, *fac)
+			tmps = append(tmps, *tmp)
 		}
 	}
-	return facs
+	return tmps
 }

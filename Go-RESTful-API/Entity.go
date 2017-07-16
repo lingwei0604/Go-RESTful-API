@@ -1,28 +1,29 @@
 package main
 
+//Immutable model
 type Student struct {
 	Id 		      string    `json:"id"`
 	ClassNum      string    `json:"classnum"`
 	Score         string    `json:"score"`
 }
 
-type class struct {
+type Class struct {
 	ClassNum      string    `json:"classnum"`
 	TeacherName   string    `json:"teachername"`
 }
 
-type ScoreInfo struct {
-	Score  string
+type Score struct {
+	totalScore  string
 }
 
-type TeacherInfo struct {
-	TeacherName string
+type Teacher struct {
+	teacherName string
 }
 
 type Base struct {
-	Code   string
-	Msg    string
+	code   string
+	msg    string
 }
 
 type Students [] Student
-type classes  [] class
+type classes  [] Class
