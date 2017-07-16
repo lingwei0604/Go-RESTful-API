@@ -17,7 +17,7 @@ Build & Run
 
 * git clone git@github.com:lingwei0604/Go-RESTful-API.git to $GOPATH/src/
 * create database manually based on student.sql
-* cd HTTP-server
+* cd Go-RESTful-API
 * go run *.go
 
 About
